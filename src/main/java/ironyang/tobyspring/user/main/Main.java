@@ -3,12 +3,17 @@ package ironyang.tobyspring.user.main;
 import ironyang.tobyspring.user.dao.DaoFactory;
 import ironyang.tobyspring.user.dao.UserDao;
 import ironyang.tobyspring.user.domain.Users;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.sql.SQLException;
 
 public class Main {
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        UserDao userDao = new DaoFactory().userDao();
+
+        ApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
+
+        UserDao userDao = context.getBean("userDao", UserDao.class);
 
         userDao.delete();
 
