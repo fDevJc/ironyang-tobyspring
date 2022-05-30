@@ -2,7 +2,6 @@ package ironyang.tobyspring.user.main;
 
 import ironyang.tobyspring.user.dao.UserDao;
 import ironyang.tobyspring.user.domain.Users;
-import org.apache.catalina.User;
 
 import java.sql.SQLException;
 

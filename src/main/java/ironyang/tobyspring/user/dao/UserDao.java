@@ -6,8 +6,7 @@ import java.sql.*;
 
 public class UserDao {
     public void add(Users users) throws ClassNotFoundException, SQLException {
-        Class.forName("org.h2.Driver");
-        Connection c = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/h2/db/etc", "sa", "");
+        Connection c = getConnection();
 
         PreparedStatement ps = c.prepareStatement(
                 "insert into users(id, name, password) values(?,?,?)"
@@ -23,8 +22,7 @@ public class UserDao {
     }
 
     public Users get(Long id) throws ClassNotFoundException, SQLException {
-        Class.forName("org.h2.Driver");
-        Connection c = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/h2/db/etc", "sa", "");
+        Connection c = getConnection();
 
         PreparedStatement ps = c.prepareStatement(
                 "select * from users where id = ?"
@@ -44,5 +42,11 @@ public class UserDao {
         c.close();
 
         return user;
+    }
+
+    private Connection getConnection() throws ClassNotFoundException, SQLException {
+        Class.forName("org.h2.Driver");
+        Connection c = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/h2/db/etc", "sa", "");
+        return c;
     }
 }
