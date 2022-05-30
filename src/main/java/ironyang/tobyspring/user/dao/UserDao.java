@@ -5,8 +5,14 @@ import ironyang.tobyspring.user.domain.Users;
 import java.sql.*;
 
 public class UserDao {
+    private SimpleConnectionMaker simpleConnectionMaker;
+
+    public UserDao() {
+        this.simpleConnectionMaker = new SimpleConnectionMaker();
+    }
+
     public void add(Users users) throws ClassNotFoundException, SQLException {
-        Connection c = getConnection();
+        Connection c = simpleConnectionMaker.getConnection();
 
         PreparedStatement ps = c.prepareStatement(
                 "insert into users(id, name, password) values(?,?,?)"
@@ -22,7 +28,7 @@ public class UserDao {
     }
 
     public Users get(Long id) throws ClassNotFoundException, SQLException {
-        Connection c = getConnection();
+        Connection c = simpleConnectionMaker.getConnection();
 
         PreparedStatement ps = c.prepareStatement(
                 "select * from users where id = ?"
@@ -42,11 +48,5 @@ public class UserDao {
         c.close();
 
         return user;
-    }
-
-    private Connection getConnection() throws ClassNotFoundException, SQLException {
-        Class.forName("org.h2.Driver");
-        Connection c = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/h2/db/etc", "sa", "");
-        return c;
     }
 }
