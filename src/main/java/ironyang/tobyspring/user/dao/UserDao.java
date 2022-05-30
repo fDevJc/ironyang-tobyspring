@@ -49,4 +49,17 @@ public class UserDao {
 
         return user;
     }
+
+    public void delete() throws SQLException, ClassNotFoundException {
+        Connection c = connectionMaker.makeConnection();
+
+        PreparedStatement ps = c.prepareStatement(
+                "delete from users"
+        );
+
+        ps.executeUpdate();
+
+        ps.close();
+        c.close();
+    }
 }

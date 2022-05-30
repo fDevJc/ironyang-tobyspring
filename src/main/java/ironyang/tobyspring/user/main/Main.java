@@ -1,5 +1,6 @@
 package ironyang.tobyspring.user.main;
 
+import ironyang.tobyspring.user.dao.DaoFactory;
 import ironyang.tobyspring.user.dao.SimpleConnectionMaker;
 import ironyang.tobyspring.user.dao.UserDao;
 import ironyang.tobyspring.user.domain.Users;
@@ -8,7 +9,9 @@ import java.sql.SQLException;
 
 public class Main {
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        UserDao userDao = new UserDao(new SimpleConnectionMaker());
+        UserDao userDao = new DaoFactory().userDao();
+
+        userDao.delete();
 
         Users users = new Users();
         users.setId(1L);
