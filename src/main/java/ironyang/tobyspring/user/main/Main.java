@@ -1,7 +1,6 @@
 package ironyang.tobyspring.user.main;
 
 import ironyang.tobyspring.user.dao.DaoFactory;
-import ironyang.tobyspring.user.dao.SimpleConnectionMaker;
 import ironyang.tobyspring.user.dao.UserDao;
 import ironyang.tobyspring.user.domain.Users;
 
@@ -17,7 +16,7 @@ public class Main {
         users.setId(1L);
         users.setName("yang");
         users.setPassword("pw");
-
+;
         userDao.add(users);
 
         Users foundUser = userDao.get(users.getId());
