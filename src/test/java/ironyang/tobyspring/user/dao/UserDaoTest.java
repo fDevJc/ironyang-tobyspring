@@ -20,19 +20,22 @@ class UserDaoTest {
 
         assertThat(userDao.getCount()).isEqualTo(0);
 
-        Users user = new Users();
-        user.setId(1L);
-        user.setName("yang");
-        user.setPassword("pw");
+        Users user1 = new Users(1L, "yang11", "pwd11");
+        Users user2 = new Users(2L, "yang22", "pwd22");
 
-        userDao.add(user);
+        userDao.add(user1);
+        userDao.add(user2);
 
-        assertThat(userDao.getCount()).isEqualTo(1);
+        assertThat(userDao.getCount()).isEqualTo(2);
 
-        Users foundUser = userDao.get(user.getId());
+        Users foundUser1 = userDao.get(user1.getId());
+        Users foundUser2 = userDao.get(user2.getId());
 
-        assertThat(foundUser.getName()).isEqualTo(user.getName());
-        assertThat(foundUser.getPassword()).isEqualTo(user.getPassword());
+        assertThat(foundUser1.getName()).isEqualTo(user1.getName());
+        assertThat(foundUser1.getPassword()).isEqualTo(user1.getPassword());
+
+        assertThat(foundUser2.getName()).isEqualTo(user2.getName());
+        assertThat(foundUser2.getPassword()).isEqualTo(user2.getPassword());
     }
 
     @Test
