@@ -1,6 +1,7 @@
 package ironyang.tobyspring.user.dao;
 
 import ironyang.tobyspring.user.domain.Users;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -10,12 +11,16 @@ import java.sql.SQLException;
 import static org.assertj.core.api.Assertions.*;
 
 class UserDaoTest {
+    UserDao userDao;
+
+    @BeforeEach
+    void setUp() {
+        ApplicationContext context = new AnnotationConfigApplicationContext(CountingDaoFactory.class);
+        userDao = context.getBean("userDao", UserDao.class);
+    }
+
     @Test
     void addAndGet() throws SQLException, ClassNotFoundException {
-        ApplicationContext context = new AnnotationConfigApplicationContext(CountingDaoFactory.class);
-
-        UserDao userDao = context.getBean("userDao", UserDao.class);
-
         userDao.deleteAll();
 
         assertThat(userDao.getCount()).isEqualTo(0);
@@ -41,10 +46,6 @@ class UserDaoTest {
     @Test
     void count() throws SQLException, ClassNotFoundException {
         //given
-        ApplicationContext context = new AnnotationConfigApplicationContext(CountingDaoFactory.class);
-
-        UserDao userDao = context.getBean("userDao", UserDao.class);
-
         Users user1 = new Users(1L, "name1", "password1");
         Users user2 = new Users(2L, "name2", "password2");
         Users user3 = new Users(3L, "name3", "password3");
@@ -63,10 +64,6 @@ class UserDaoTest {
     @Test
     void getUserFailure() throws SQLException, ClassNotFoundException {
         //given
-        ApplicationContext context = new AnnotationConfigApplicationContext(CountingDaoFactory.class);
-
-        UserDao userDao = context.getBean("userDao", UserDao.class);
-
         userDao.deleteAll();
         assertThat(userDao.getCount()).isEqualTo(0);
 
