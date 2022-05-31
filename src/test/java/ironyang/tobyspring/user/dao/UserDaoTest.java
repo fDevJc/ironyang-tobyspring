@@ -12,11 +12,18 @@ import static org.assertj.core.api.Assertions.*;
 
 class UserDaoTest {
     UserDao userDao;
+    Users user1;
+    Users user2;
+    Users user3;
 
     @BeforeEach
     void setUp() {
         ApplicationContext context = new AnnotationConfigApplicationContext(CountingDaoFactory.class);
         userDao = context.getBean("userDao", UserDao.class);
+
+        user1 = new Users(1L, "name1", "password1");
+        user2 = new Users(2L, "name2", "password2");
+        user3 = new Users(3L, "name3", "password3");
     }
 
     @Test
@@ -24,9 +31,6 @@ class UserDaoTest {
         userDao.deleteAll();
 
         assertThat(userDao.getCount()).isEqualTo(0);
-
-        Users user1 = new Users(1L, "yang11", "pwd11");
-        Users user2 = new Users(2L, "yang22", "pwd22");
 
         userDao.add(user1);
         userDao.add(user2);
@@ -45,11 +49,6 @@ class UserDaoTest {
 
     @Test
     void count() throws SQLException, ClassNotFoundException {
-        //given
-        Users user1 = new Users(1L, "name1", "password1");
-        Users user2 = new Users(2L, "name2", "password2");
-        Users user3 = new Users(3L, "name3", "password3");
-
         //when && then
         userDao.deleteAll();
         assertThat(userDao.getCount()).isEqualTo(0);
