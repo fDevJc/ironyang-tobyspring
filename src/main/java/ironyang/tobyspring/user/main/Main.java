@@ -15,7 +15,7 @@ public class Main {
 
         UserDao userDao = context.getBean("userDao", UserDao.class);
 
-        userDao.delete();
+        userDao.deleteAll();
 
         Users users = new Users();
         users.setId(1L);

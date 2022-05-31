@@ -50,7 +50,7 @@ public class UserDao {
         return user;
     }
 
-    public void delete() throws SQLException, ClassNotFoundException {
+    public void deleteAll() throws SQLException, ClassNotFoundException {
         Connection c = connectionMaker.makeConnection();
 
         PreparedStatement ps = c.prepareStatement(
