@@ -18,6 +18,8 @@ class UserDaoTest {
 
         userDao.deleteAll();
 
+        assertThat(userDao.getCount()).isEqualTo(0);
+
         Users user = new Users();
         user.setId(1L);
         user.setName("yang");
@@ -25,13 +27,11 @@ class UserDaoTest {
 
         userDao.add(user);
 
+        assertThat(userDao.getCount()).isEqualTo(1);
+
         Users foundUser = userDao.get(user.getId());
 
         assertThat(foundUser.getName()).isEqualTo(user.getName());
         assertThat(foundUser.getPassword()).isEqualTo(user.getPassword());
-
-        CountConnectionMaker connectionMaker = context.getBean("connectionMaker", CountConnectionMaker.class);
-        System.out.println("connectionMaker.getCount() = " + connectionMaker.getCount());
     }
-
 }
