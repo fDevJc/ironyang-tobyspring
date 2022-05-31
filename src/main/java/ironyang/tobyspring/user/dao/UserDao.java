@@ -37,15 +37,21 @@ public class UserDao {
         ps.setLong(1, id);
 
         ResultSet rs = ps.executeQuery();
-        rs.next();
-        Users user = new Users();
-        user.setId(rs.getLong("id"));
-        user.setName(rs.getString("name"));
-        user.setPassword(rs.getString("password"));
+        Users user = null;
+        if (rs.next()) {
+            user = new Users();
+            user.setId(rs.getLong("id"));
+            user.setName(rs.getString("name"));
+            user.setPassword(rs.getString("password"));
+        }
 
         rs.close();
         ps.close();
         c.close();
+
+        if (user == null) {
+            throw new IllegalArgumentException();
+        }
 
         return user;
     }

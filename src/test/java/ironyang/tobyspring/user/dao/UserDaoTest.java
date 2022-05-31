@@ -59,4 +59,19 @@ class UserDaoTest {
         userDao.add(user3);
         assertThat(userDao.getCount()).isEqualTo(3);
     }
+
+    @Test
+    void getUserFailure() throws SQLException, ClassNotFoundException {
+        //given
+        ApplicationContext context = new AnnotationConfigApplicationContext(CountingDaoFactory.class);
+
+        UserDao userDao = context.getBean("userDao", UserDao.class);
+
+        userDao.deleteAll();
+        assertThat(userDao.getCount()).isEqualTo(0);
+
+        Long unknownId = 9999L;
+        assertThatThrownBy(() -> userDao.get(unknownId))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 }
