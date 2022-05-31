@@ -3,14 +3,24 @@ package ironyang.tobyspring.user.dao;
 import ironyang.tobyspring.user.domain.Users;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.*;
 
+@SpringBootTest
+@ContextConfiguration(classes = {CountingDaoFactory.class})
+//@Import(CountingDaoFactory.class)
 class UserDaoTest {
+    @Autowired
+    ApplicationContext context;
     UserDao userDao;
     Users user1;
     Users user2;
@@ -18,7 +28,8 @@ class UserDaoTest {
 
     @BeforeEach
     void setUp() {
-        ApplicationContext context = new AnnotationConfigApplicationContext(CountingDaoFactory.class);
+        System.out.println("context = " + context);
+        System.out.println("this = " + this);
         userDao = context.getBean("userDao", UserDao.class);
 
         user1 = new Users(1L, "name1", "password1");
