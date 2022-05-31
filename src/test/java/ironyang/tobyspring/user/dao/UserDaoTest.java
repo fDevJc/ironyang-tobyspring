@@ -34,4 +34,26 @@ class UserDaoTest {
         assertThat(foundUser.getName()).isEqualTo(user.getName());
         assertThat(foundUser.getPassword()).isEqualTo(user.getPassword());
     }
+
+    @Test
+    void count() throws SQLException, ClassNotFoundException {
+        //given
+        ApplicationContext context = new AnnotationConfigApplicationContext(CountingDaoFactory.class);
+
+        UserDao userDao = context.getBean("userDao", UserDao.class);
+
+        Users user1 = new Users(1L, "name1", "password1");
+        Users user2 = new Users(2L, "name2", "password2");
+        Users user3 = new Users(3L, "name3", "password3");
+
+        //when && then
+        userDao.deleteAll();
+        assertThat(userDao.getCount()).isEqualTo(0);
+        userDao.add(user1);
+        assertThat(userDao.getCount()).isEqualTo(1);
+        userDao.add(user2);
+        assertThat(userDao.getCount()).isEqualTo(2);
+        userDao.add(user3);
+        assertThat(userDao.getCount()).isEqualTo(3);
+    }
 }
