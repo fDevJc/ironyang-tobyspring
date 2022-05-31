@@ -15,6 +15,7 @@ import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.*;
 
+
 @SpringBootTest
 @ContextConfiguration(classes = {CountingDaoFactory.class})
 class UserDaoTest {
@@ -28,6 +29,7 @@ class UserDaoTest {
 
     @BeforeEach
     void setUp() {
+
         System.out.println("context = " + context);
         System.out.println("this = " + this);
         System.out.println("userDao = " + userDao);
