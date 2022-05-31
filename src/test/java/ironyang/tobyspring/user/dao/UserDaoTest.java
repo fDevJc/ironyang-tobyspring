@@ -17,10 +17,10 @@ import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 @ContextConfiguration(classes = {CountingDaoFactory.class})
-//@Import(CountingDaoFactory.class)
 class UserDaoTest {
     @Autowired
     ApplicationContext context;
+    @Autowired
     UserDao userDao;
     Users user1;
     Users user2;
@@ -30,7 +30,7 @@ class UserDaoTest {
     void setUp() {
         System.out.println("context = " + context);
         System.out.println("this = " + this);
-        userDao = context.getBean("userDao", UserDao.class);
+        System.out.println("userDao = " + userDao);
 
         user1 = new Users(1L, "name1", "password1");
         user2 = new Users(2L, "name2", "password2");
