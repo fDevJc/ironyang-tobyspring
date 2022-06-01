@@ -3,6 +3,8 @@ package ironyang.tobyspring.user.dao;
 import ironyang.tobyspring.user.domain.Users;
 
 import java.sql.*;
+import java.util.Arrays;
+import java.util.stream.IntStream;
 
 public class UserDao {
     private ConnectionMaker connectionMaker;
@@ -14,17 +16,12 @@ public class UserDao {
     }
 
     public void add(final Users user) throws ClassNotFoundException, SQLException {
-        jdbcContext.workWithStatementStrategy(c -> {
-            PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?,?,?)");
-            ps.setLong(1, user.getId());
-            ps.setString(2, user.getName());
-            ps.setString(3, user.getPassword());
-            return ps;
-        });
+        String sql = "insert into users(id, name, password) values(?,?,?)";
+        jdbcContext.executeSql(sql,user.getId(),user.getName(),user.getPassword());
     }
 
     public void deleteAll() throws SQLException, ClassNotFoundException {
-        jdbcContext.workWithStatementStrategy(c -> c.prepareStatement("delete from users"));
+        jdbcContext.executeSql("delete from users");
     }
 
     public Users get(Long id) throws ClassNotFoundException, SQLException {
