@@ -57,33 +57,83 @@ public class UserDao {
     }
 
     public void deleteAll() throws SQLException, ClassNotFoundException {
-        Connection c = connectionMaker.makeConnection();
+        String sql = "delete from users";
+        try (Connection c = connectionMaker.makeConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.executeUpdate();
+        }
+    }
 
-        PreparedStatement ps = c.prepareStatement(
-                "delete from users"
-        );
+    public void deleteAll_try_catch_finally() throws SQLException, ClassNotFoundException {
+        String sql = "delete from users";
+        Connection c = null;
+        PreparedStatement ps = null;
+        try {
+            c = connectionMaker.makeConnection();
+            ps = c.prepareStatement(sql);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            throw e;
+        }finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
 
-        ps.executeUpdate();
+                }
+            }
+            if (c != null) {
+                try {
+                    c.close();
+                } catch (SQLException e) {
 
-        ps.close();
-        c.close();
+                }
+            }
+        }
     }
 
     public int getCount() throws ClassNotFoundException, SQLException {
-        Connection c = connectionMaker.makeConnection();
+        try (Connection c = connectionMaker.makeConnection();
+             PreparedStatement ps = c.prepareStatement("select count(*) from users");
+             ResultSet rs = ps.executeQuery()) {
+            rs.next();
+            int count = rs.getInt(1);
+            return count;
+        }
+    }
 
-        PreparedStatement ps = c.prepareStatement(
-                "select count(*) from users"
-        );
-
-        ResultSet rs = ps.executeQuery();
-        rs.next();
-        int count = rs.getInt(1);
-
-        rs.close();
-        ps.close();
-        c.close();
-
-        return count;
+    public int getCount_try_catch_finally() throws ClassNotFoundException, SQLException {
+        Connection c = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            c = connectionMaker.makeConnection();
+            ps = c.prepareStatement("select count(*) from users");
+            rs = ps.executeQuery();
+            rs.next();
+            int count = rs.getInt(1);
+            return count;
+        } catch (Exception e) {
+            throw e;
+        }finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                }
+            }
+            if (c != null) {
+                try {
+                    c.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
     }
 }
