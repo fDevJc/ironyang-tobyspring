@@ -26,4 +26,10 @@ public class CalculatorTest {
         //when & then
         assertThat(calculator.multiple()).isEqualTo(24);
     }
+
+    @Test
+    void calcConcatTest() throws IOException {
+        //when & then
+        assertThat(calculator.concat()).isEqualTo("1234");
+    }
 }

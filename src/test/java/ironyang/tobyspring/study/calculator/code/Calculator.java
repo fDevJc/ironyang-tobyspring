@@ -18,4 +18,8 @@ public class Calculator {
     public int multiple() throws IOException {
         return bfr.byPath(path, 1, (result, line) -> result * Integer.parseInt(line));
     }
+
+    public String concat() throws IOException {
+        return bfr.byPath(path, "", (result, line) -> result + line);
+    }
 }
