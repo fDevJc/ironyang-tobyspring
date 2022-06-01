@@ -3,8 +3,6 @@ package ironyang.tobyspring.user.dao;
 import ironyang.tobyspring.user.domain.Users;
 
 import java.sql.*;
-import java.util.Arrays;
-import java.util.stream.IntStream;
 
 public class UserDao {
     private ConnectionMaker connectionMaker;
