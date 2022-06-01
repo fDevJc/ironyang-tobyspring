@@ -1,6 +1,5 @@
 package ironyang.tobyspring.user.dao;
 
-import ironyang.tobyspring.user.dao.statement.AddStatement;
 import ironyang.tobyspring.user.dao.statement.DeleteAllStatement;
 import ironyang.tobyspring.user.dao.statement.StatementStrategy;
 import ironyang.tobyspring.user.domain.Users;
@@ -14,8 +13,18 @@ public class UserDao {
         this.connectionMaker = connectionMaker;
     }
 
-    public void add(Users users) throws ClassNotFoundException, SQLException {
-        jdbcContextWithStatementStrategy(new AddStatement(users));
+    public void add(final Users user) throws ClassNotFoundException, SQLException {
+        class AddStatement implements StatementStrategy{
+            @Override
+            public PreparedStatement makePrepareStatement(Connection c) throws SQLException {
+                PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?,?,?)");
+                ps.setLong(1, user.getId());
+                ps.setString(2, user.getName());
+                ps.setString(3, user.getPassword());
+                return ps;
+            }
+        }
+        jdbcContextWithStatementStrategy(new AddStatement());
     }
 
     public void deleteAll() throws SQLException, ClassNotFoundException {
