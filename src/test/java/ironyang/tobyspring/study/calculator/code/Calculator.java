@@ -12,7 +12,7 @@ public class Calculator {
             int sum = 0;
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                sum += Integer.parseInt(line);
+                sum = sum(sum, Integer.parseInt(line));
             }
             return sum;
         } catch (IOException e) {
@@ -26,5 +26,9 @@ public class Calculator {
                 }
             }
         }
+    }
+    private int sum(int sum, int number) {
+        sum = sum + number;
+        return sum;
     }
 }
