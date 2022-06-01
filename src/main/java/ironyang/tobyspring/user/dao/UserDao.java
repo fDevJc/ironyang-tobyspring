@@ -1,20 +1,20 @@
 package ironyang.tobyspring.user.dao;
 
-import ironyang.tobyspring.user.dao.statement.DeleteAllStatement;
-import ironyang.tobyspring.user.dao.statement.StatementStrategy;
 import ironyang.tobyspring.user.domain.Users;
 
 import java.sql.*;
 
 public class UserDao {
     private ConnectionMaker connectionMaker;
+    private JdbcContext jdbcContext;
 
-    public UserDao(ConnectionMaker connectionMaker) {
+    public UserDao(ConnectionMaker connectionMaker, JdbcContext jdbcContext) {
         this.connectionMaker = connectionMaker;
+        this.jdbcContext = jdbcContext;
     }
 
     public void add(final Users user) throws ClassNotFoundException, SQLException {
-        jdbcContextWithStatementStrategy(c -> {
+        jdbcContext.workWithStatementStrategy(c -> {
             PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?,?,?)");
             ps.setLong(1, user.getId());
             ps.setString(2, user.getName());
@@ -24,21 +24,7 @@ public class UserDao {
     }
 
     public void deleteAll() throws SQLException, ClassNotFoundException {
-        jdbcContextWithStatementStrategy(c -> c.prepareStatement("delete from users"));
-    }
-
-    public void add_v1(final Users user) throws ClassNotFoundException, SQLException {
-        StatementStrategy statementStrategy = new StatementStrategy() {
-            @Override
-            public PreparedStatement makePrepareStatement(Connection c) throws SQLException {
-                PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?,?,?)");
-                ps.setLong(1, user.getId());
-                ps.setString(2, user.getName());
-                ps.setString(3, user.getPassword());
-                return ps;
-            }
-        };
-        jdbcContextWithStatementStrategy(statementStrategy);
+        jdbcContext.workWithStatementStrategy(c -> c.prepareStatement("delete from users"));
     }
 
     public Users get(Long id) throws ClassNotFoundException, SQLException {
@@ -68,47 +54,6 @@ public class UserDao {
         }
 
         return user;
-    }
-
-    public void deleteAll_try_with_resources() throws SQLException, ClassNotFoundException {
-        try (Connection c = connectionMaker.makeConnection();
-             PreparedStatement ps = c.prepareStatement("delete from users")) {
-            ps.executeUpdate();
-        }
-    }
-
-    public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException, ClassNotFoundException {
-        Connection c = null;
-        PreparedStatement ps = null;
-        try {
-            c = connectionMaker.makeConnection();
-            ps = stmt.makePrepareStatement(c);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw e;
-        }finally {
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException e) {}
-            }
-            if (c != null) {
-                try {
-                    c.close();
-                } catch (SQLException e) {}
-            }
-        }
-    }
-
-
-    public int getCount_try_with_resources() throws ClassNotFoundException, SQLException {
-        try (Connection c = connectionMaker.makeConnection();
-             PreparedStatement ps = c.prepareStatement("select count(*) from users");
-             ResultSet rs = ps.executeQuery()) {
-            rs.next();
-            int count = rs.getInt(1);
-            return count;
-        }
     }
 
     public int getCount() throws ClassNotFoundException, SQLException {
