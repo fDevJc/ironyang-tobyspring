@@ -1,7 +1,6 @@
 package ironyang.tobyspring.study.calculator;
 
 import ironyang.tobyspring.study.calculator.code.Calculator;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -16,7 +15,7 @@ public class CalculatorTest {
 
         //when
         String path = getClass().getResource("numbers.txt").getPath();
-        int sum = calculator.calcSum(path);
+        int sum = calculator.calculate(path);
 
         //then
         assertThat(sum).isEqualTo(10);

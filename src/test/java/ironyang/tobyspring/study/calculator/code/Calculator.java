@@ -5,7 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class Calculator {
-    public int calcSum(String path) throws IOException {
+    public int calculate(String path) throws IOException {
         BufferedReader bufferedReader = null;
         try {
             bufferedReader = new BufferedReader(new FileReader(path));
