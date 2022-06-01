@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class SimpleConnectionMaker implements ConnectionMaker{
-    private Connection getConnection() throws ClassNotFoundException, SQLException {
+    private Connection getConnection() throws SQLException, ClassNotFoundException {
         Class.forName("org.h2.Driver");
         Connection c = DriverManager.getConnection("jdbc:h2:tcp://localhost/~/h2/db/etc", "sa", "");
         return c;

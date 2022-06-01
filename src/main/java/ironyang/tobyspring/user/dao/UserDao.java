@@ -56,43 +56,43 @@ public class UserDao {
         return user;
     }
 
-    public void deleteAll() throws SQLException, ClassNotFoundException {
-        String sql = "delete from users";
+    public void deleteAll_try_with_resources() throws SQLException, ClassNotFoundException {
         try (Connection c = connectionMaker.makeConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
+             PreparedStatement ps = c.prepareStatement("delete from users")) {
             ps.executeUpdate();
         }
     }
 
-    public void deleteAll_try_catch_finally() throws SQLException, ClassNotFoundException {
-        String sql = "delete from users";
+    public void deleteAll() throws SQLException, ClassNotFoundException {
+        StatementStrategy strategy = new DeleteAllStatement();
+        jdbcContextWithStatementStrategy(strategy);
+    }
+
+    public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException, ClassNotFoundException {
         Connection c = null;
         PreparedStatement ps = null;
         try {
             c = connectionMaker.makeConnection();
-            ps = c.prepareStatement(sql);
+            ps = stmt.makePrepareStatement(c);
             ps.executeUpdate();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw e;
         }finally {
             if (ps != null) {
                 try {
                     ps.close();
-                } catch (SQLException e) {
-
-                }
+                } catch (SQLException e) {}
             }
             if (c != null) {
                 try {
                     c.close();
-                } catch (SQLException e) {
-
-                }
+                } catch (SQLException e) {}
             }
         }
     }
 
-    public int getCount() throws ClassNotFoundException, SQLException {
+
+    public int getCount_try_with_resources() throws ClassNotFoundException, SQLException {
         try (Connection c = connectionMaker.makeConnection();
              PreparedStatement ps = c.prepareStatement("select count(*) from users");
              ResultSet rs = ps.executeQuery()) {
@@ -102,7 +102,7 @@ public class UserDao {
         }
     }
 
-    public int getCount_try_catch_finally() throws ClassNotFoundException, SQLException {
+    public int getCount() throws ClassNotFoundException, SQLException {
         Connection c = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -119,20 +119,17 @@ public class UserDao {
             if (rs != null) {
                 try {
                     rs.close();
-                } catch (SQLException e) {
-                }
+                } catch (SQLException e) {}
             }
             if (ps != null) {
                 try {
                     ps.close();
-                } catch (SQLException e) {
-                }
+                } catch (SQLException e) {}
             }
             if (c != null) {
                 try {
                     c.close();
-                } catch (SQLException e) {
-                }
+                } catch (SQLException e) {}
             }
         }
     }
