@@ -1,6 +1,7 @@
 package ironyang.tobyspring.study.calculator;
 
 import ironyang.tobyspring.study.calculator.code.Calculator;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -8,16 +9,21 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.*;
 
 public class CalculatorTest {
+    private Calculator calculator;
+    @BeforeEach
+    void setUp() {
+        calculator = new Calculator(getClass().getResource("numbers.txt").getPath());
+    }
+
     @Test
     void calcSumTest() throws IOException {
-        //given
-        Calculator calculator = new Calculator();
+        //when & then
+        assertThat(calculator.sum()).isEqualTo(10);
+    }
 
-        //when
-        String path = getClass().getResource("numbers.txt").getPath();
-        int sum = calculator.calculate(path);
-
-        //then
-        assertThat(sum).isEqualTo(10);
+    @Test
+    void calcMulTest() throws IOException {
+        //when & then
+        assertThat(calculator.multiple()).isEqualTo(24);
     }
 }
