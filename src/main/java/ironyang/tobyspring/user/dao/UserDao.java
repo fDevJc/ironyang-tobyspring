@@ -8,9 +8,9 @@ public class UserDao {
     private ConnectionMaker connectionMaker;
     private JdbcContext jdbcContext;
 
-    public UserDao(ConnectionMaker connectionMaker, JdbcContext jdbcContext) {
+    public UserDao(ConnectionMaker connectionMaker) {
         this.connectionMaker = connectionMaker;
-        this.jdbcContext = jdbcContext;
+        jdbcContext = new JdbcContext(connectionMaker);
     }
 
     public void add(final Users user) throws ClassNotFoundException, SQLException {

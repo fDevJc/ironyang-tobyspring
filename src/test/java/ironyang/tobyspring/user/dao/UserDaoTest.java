@@ -6,9 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.sql.SQLException;
@@ -17,7 +14,7 @@ import static org.assertj.core.api.Assertions.*;
 
 
 @SpringBootTest
-@ContextConfiguration(classes = {CountingDaoFactory.class})
+@ContextConfiguration(classes = {DaoFactory.class})
 class UserDaoTest {
     @Autowired
     ApplicationContext context;
