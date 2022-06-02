@@ -52,6 +52,7 @@ public class UserDaoMy implements UserDao{
     @Override
     public void add(final Users user) throws ClassNotFoundException, SQLException {
         String sql = "insert into users(id, name, password, level, login, recommend) values(?,?,?,?,?,?)";
+        
         jdbcContext.executeSql(sql, user.getId(), user.getName(), user.getPassword(), user.getLevel().getValue(), user.getLogin(), user.getRecommend());
     }
 
