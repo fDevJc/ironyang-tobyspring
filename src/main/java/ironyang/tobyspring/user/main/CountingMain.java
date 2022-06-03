@@ -2,7 +2,7 @@ package ironyang.tobyspring.user.main;
 
 import ironyang.tobyspring.user.dao.CountConnectionMaker;
 import ironyang.tobyspring.user.dao.CountingDaoFactory;
-import ironyang.tobyspring.user.dao.UserDao;
+import ironyang.tobyspring.user.dao.UserDaoMy;
 import ironyang.tobyspring.user.domain.Users;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -14,7 +14,7 @@ public class CountingMain {
 
         ApplicationContext context = new AnnotationConfigApplicationContext(CountingDaoFactory.class);
 
-        UserDao userDao = context.getBean("userDao", UserDao.class);
+        UserDaoMy userDao = context.getBean("userDao", UserDaoMy.class);
 
         userDao.deleteAll();
 
