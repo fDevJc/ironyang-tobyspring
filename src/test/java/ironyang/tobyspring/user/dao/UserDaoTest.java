@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.*;
 
 
 @SpringBootTest
-@ContextConfiguration(classes = {DaoFactory.class})
+//@ContextConfiguration(classes = {DaoFactory.class})
 class UserDaoTest {
     @Autowired
     ApplicationContext context;
