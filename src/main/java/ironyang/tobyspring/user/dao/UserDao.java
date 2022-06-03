@@ -1,5 +1,6 @@
 package ironyang.tobyspring.user.dao;
 
+import ironyang.tobyspring.user.domain.Level;
 import ironyang.tobyspring.user.domain.Users;
 
 import java.sql.*;
@@ -14,8 +15,8 @@ public class UserDao {
     }
 
     public void add(final Users user) throws ClassNotFoundException, SQLException {
-        String sql = "insert into users(id, name, password) values(?,?,?)";
-        jdbcContext.executeSql(sql,user.getId(),user.getName(),user.getPassword());
+        String sql = "insert into users(id, name, password, level, login, recommend) values(?,?,?,?,?,?)";
+        jdbcContext.executeSql(sql, user.getId(), user.getName(), user.getPassword(), user.getLevel().getValue(), user.getLogin(), user.getRecommend());
     }
 
     public void deleteAll() throws SQLException, ClassNotFoundException {
@@ -38,6 +39,9 @@ public class UserDao {
             user.setId(rs.getLong("id"));
             user.setName(rs.getString("name"));
             user.setPassword(rs.getString("password"));
+            user.setLevel(Level.valueOf(rs.getInt("level")));
+            user.setLogin(rs.getInt("login"));
+            user.setRecommend(rs.getInt("recommend"));
         }
 
         rs.close();
@@ -81,5 +85,16 @@ public class UserDao {
                 } catch (SQLException e) {}
             }
         }
+    }
+
+    public void update(Users user) throws SQLException, ClassNotFoundException {
+        String sql = "update users" +
+                " set name = ?" +
+                " , password = ?" +
+                " , level = ?" +
+                " , login = ?" +
+                " , recommend = ?" +
+                " where id = ?";
+        jdbcContext.executeSql(sql, user.getName(), user.getPassword(), user.getLevel().getValue(), user.getLogin(), user.getRecommend(), user.getId());
     }
 }

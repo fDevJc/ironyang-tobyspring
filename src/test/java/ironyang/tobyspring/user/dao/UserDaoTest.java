@@ -51,11 +51,18 @@ class UserDaoTest {
         Users foundUser1 = userDao.get(user1.getId());
         Users foundUser2 = userDao.get(user2.getId());
 
-        assertThat(foundUser1.getName()).isEqualTo(user1.getName());
-        assertThat(foundUser1.getPassword()).isEqualTo(user1.getPassword());
+        checkSameUser(foundUser1, user1);
 
-        assertThat(foundUser2.getName()).isEqualTo(user2.getName());
-        assertThat(foundUser2.getPassword()).isEqualTo(user2.getPassword());
+        checkSameUser(foundUser2, user2);
+    }
+
+    private void checkSameUser(Users user1, Users user2) {
+        assertThat(user1.getId()).isEqualTo(user2.getId());
+        assertThat(user1.getName()).isEqualTo(user2.getName());
+        assertThat(user1.getPassword()).isEqualTo(user2.getPassword());
+        assertThat(user1.getLevel()).isEqualTo(user2.getLevel());
+        assertThat(user1.getLogin()).isEqualTo(user2.getLogin());
+        assertThat(user1.getRecommend()).isEqualTo(user2.getRecommend());
     }
 
     @Test
@@ -80,5 +87,26 @@ class UserDaoTest {
         Long unknownId = 9999L;
         assertThatThrownBy(() -> userDao.get(unknownId))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void update() throws SQLException, ClassNotFoundException {
+        //given
+        userDao.deleteAll();
+        //when
+        userDao.add(user1);
+        userDao.add(user2);
+
+        user1.setName("바뀐이름");
+        user1.setPassword("바뀐비번");
+        user1.setLevel(Level.GOLD);
+        user1.setLogin(1000);
+        user1.setRecommend(999);
+        userDao.update(user1);
+        //then
+        Users user1Update = userDao.get(user1.getId());
+        checkSameUser(user1, user1Update);
+        Users user2Same = userDao.get(user2.getId());
+        checkSameUser(user2, user2Same);
     }
 }
