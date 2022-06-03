@@ -4,6 +4,8 @@ import ironyang.tobyspring.user.domain.Level;
 import ironyang.tobyspring.user.domain.Users;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDaoMy implements UserDao{
     private ConnectionMaker connectionMaker;
@@ -12,6 +14,39 @@ public class UserDaoMy implements UserDao{
     public UserDaoMy(ConnectionMaker connectionMaker) {
         this.connectionMaker = connectionMaker;
         jdbcContext = new JdbcContext(connectionMaker);
+    }
+
+    @Override
+    public List<Users> getAll() throws SQLException, ClassNotFoundException {
+        Connection c = connectionMaker.makeConnection();
+        List<Users> users = new ArrayList<>();
+
+        PreparedStatement ps = c.prepareStatement(
+                "select * from users"
+        );
+
+        ResultSet rs = ps.executeQuery();
+        Users user = null;
+        while (rs.next()) {
+            user = new Users();
+            user.setId(rs.getLong("id"));
+            user.setName(rs.getString("name"));
+            user.setPassword(rs.getString("password"));
+            user.setLevel(Level.valueOf(rs.getInt("level")));
+            user.setLogin(rs.getInt("login"));
+            user.setRecommend(rs.getInt("recommend"));
+            users.add(user);
+        }
+
+        rs.close();
+        ps.close();
+        c.close();
+
+        if (user == null) {
+            throw new IllegalArgumentException();
+        }
+
+        return users;
     }
 
     @Override
