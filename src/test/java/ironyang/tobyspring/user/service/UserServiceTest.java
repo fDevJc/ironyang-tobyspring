@@ -24,7 +24,8 @@ class UserServiceTest {
     List<Users> users;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws SQLException, ClassNotFoundException {
+        userDao.deleteAll();
         users = Arrays.asList(
                 new Users(1L, "name1", "password1", Level.BASIC, 49, 0),
                 new Users(2L, "name2", "password2", Level.BASIC, 50, 0),
@@ -43,8 +44,6 @@ class UserServiceTest {
     @Test
     void updateLevels() throws SQLException, ClassNotFoundException {
         //given
-        userDao.deleteAll();
-
         for (Users user : users) {
             userDao.add(user);
         }
@@ -61,5 +60,25 @@ class UserServiceTest {
 
     private void checkLevel(Users user, Level level) throws ClassNotFoundException, SQLException {
         assertThat(userDao.get(user.getId()).getLevel()).isEqualTo(level);
+    }
+
+    @Test
+    void add() throws SQLException, ClassNotFoundException {
+        //given
+        Users userWithLevel = users.get(0);
+        Users userWithoutLevel = users.get(1);
+        userWithoutLevel.setLevel(null);
+
+        //when
+        userService.add(userWithLevel);
+        userService.add(userWithoutLevel);
+
+        Users foundUserWithLevel = userDao.get(userWithLevel.getId());
+        Users foundUserWithoutLevel = userDao.get(userWithoutLevel.getId());
+
+        //then
+        assertThat(foundUserWithLevel.getLevel()).isEqualTo(userWithLevel.getLevel());
+        assertThat(foundUserWithoutLevel.getLevel()).isEqualTo(userWithoutLevel.getLevel());
+
     }
 }

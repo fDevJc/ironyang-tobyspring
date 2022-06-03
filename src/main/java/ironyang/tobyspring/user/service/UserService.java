@@ -32,4 +32,11 @@ public class UserService {
             }
         }
     }
+
+    public void add(Users user) throws SQLException, ClassNotFoundException {
+        if (user.getLevel() == null) {
+            user.setLevel(Level.BASIC);
+        }
+        userDao.add(user);
+    }
 }
