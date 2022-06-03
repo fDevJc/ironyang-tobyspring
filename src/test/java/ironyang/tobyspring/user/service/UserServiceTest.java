@@ -12,8 +12,8 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
-import static ironyang.tobyspring.user.service.UserService.MIN_LOGIN_COUNT_FOR_SILVER;
-import static ironyang.tobyspring.user.service.UserService.MIN_RECOMMEND_FOR_GOLD;
+import static ironyang.tobyspring.user.service.levelupgradepolicy.SimpleUserLevelUpgradePolicy.MIN_LOGIN_COUNT_FOR_SILVER;
+import static ironyang.tobyspring.user.service.levelupgradepolicy.SimpleUserLevelUpgradePolicy.MIN_RECOMMEND_FOR_GOLD;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
