@@ -10,6 +10,8 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class UserService {
+    public static final int MIN_LOGIN_COUNT_FOR_SILVER = 50;
+    public static final int MIN_RECOMMEND_FOR_GOLD = 30;
     private final UserDao userDao;
 
     public void upgradeLevels() throws SQLException, ClassNotFoundException {
@@ -30,9 +32,9 @@ public class UserService {
         Level currentLevel = user.getLevel();
         switch (currentLevel) {
             case BASIC:
-                return (user.getLogin() >= 50);
+                return (user.getLogin() >= MIN_LOGIN_COUNT_FOR_SILVER);
             case SILVER:
-                return (user.getRecommend() >= 30);
+                return (user.getRecommend() >= MIN_RECOMMEND_FOR_GOLD);
             case GOLD:
                 return false;
             default:

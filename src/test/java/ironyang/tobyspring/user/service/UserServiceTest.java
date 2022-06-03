@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
+import static ironyang.tobyspring.user.service.UserService.MIN_LOGIN_COUNT_FOR_SILVER;
+import static ironyang.tobyspring.user.service.UserService.MIN_RECOMMEND_FOR_GOLD;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -27,10 +29,10 @@ class UserServiceTest {
     void setUp() throws SQLException, ClassNotFoundException {
         userDao.deleteAll();
         users = Arrays.asList(
-                new Users(1L, "name1", "password1", Level.BASIC, 49, 0),
-                new Users(2L, "name2", "password2", Level.BASIC, 50, 0),
-                new Users(3L, "name3", "password3", Level.SILVER, 60, 29),
-                new Users(4L, "name4", "password3", Level.SILVER, 60, 30),
+                new Users(1L, "name1", "password1", Level.BASIC, MIN_LOGIN_COUNT_FOR_SILVER - 1, 0),
+                new Users(2L, "name2", "password2", Level.BASIC, MIN_LOGIN_COUNT_FOR_SILVER, 0),
+                new Users(3L, "name3", "password3", Level.SILVER, 60, MIN_RECOMMEND_FOR_GOLD - 1),
+                new Users(4L, "name4", "password3", Level.SILVER, 60, MIN_RECOMMEND_FOR_GOLD),
                 new Users(5L, "name5", "password3", Level.GOLD, 100, 100)
         );
     }
