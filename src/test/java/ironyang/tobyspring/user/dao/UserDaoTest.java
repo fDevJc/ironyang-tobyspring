@@ -1,5 +1,6 @@
 package ironyang.tobyspring.user.dao;
 
+import ironyang.tobyspring.user.domain.Level;
 import ironyang.tobyspring.user.domain.Users;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,9 +32,9 @@ class UserDaoTest {
         System.out.println("this = " + this);
         System.out.println("userDao = " + userDao);
 
-        user1 = new Users(1L, "name1", "password1");
-        user2 = new Users(2L, "name2", "password2");
-        user3 = new Users(3L, "name3", "password3");
+        user1 = new Users(1L, "name1", "password1", Level.BASIC, 1, 0);
+        user2 = new Users(2L, "name2", "password2", Level.SILVER, 55, 10);
+        user3 = new Users(3L, "name3", "password3", Level.GOLD, 100, 40);
     }
 
     @Test
