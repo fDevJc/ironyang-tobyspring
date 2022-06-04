@@ -3,6 +3,7 @@ package ironyang.tobyspring.user.service;
 import ironyang.tobyspring.user.dao.UserDao;
 import ironyang.tobyspring.user.domain.Level;
 import ironyang.tobyspring.user.domain.Users;
+import ironyang.tobyspring.user.service.levelupgradepolicy.SimpleUserLevelUpgradePolicy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.util.List;
 import static ironyang.tobyspring.user.service.levelupgradepolicy.SimpleUserLevelUpgradePolicy.MIN_LOGIN_COUNT_FOR_SILVER;
 import static ironyang.tobyspring.user.service.levelupgradepolicy.SimpleUserLevelUpgradePolicy.MIN_RECOMMEND_FOR_GOLD;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 class UserServiceTest {
@@ -70,7 +72,7 @@ class UserServiceTest {
     }
 
     @Test
-    void add() throws SQLException, ClassNotFoundException {
+    void addUserLevelCheck() throws SQLException, ClassNotFoundException {
         //given
         Users userWithLevel = users.get(0);
         Users userWithoutLevel = users.get(1);
@@ -86,6 +88,34 @@ class UserServiceTest {
         //then
         assertThat(foundUserWithLevel.getLevel()).isEqualTo(userWithLevel.getLevel());
         assertThat(foundUserWithoutLevel.getLevel()).isEqualTo(userWithoutLevel.getLevel());
+    }
 
+    @Test
+    void upgradeAllOrNothing() throws SQLException, ClassNotFoundException {
+        UserService testUserService = new UserService(this.userDao, new TestUserLevelUpgradePolicy(users.get(3).getId()));
+        for (Users user : users) {
+            userDao.add(user);
+        }
+        assertThatThrownBy(() -> testUserService.upgradeLevels())
+                .isInstanceOf(RuntimeException.class);
+        for (Users user : users) {
+            checkLevel(user, false);
+        }
+    }
+
+    static class TestUserLevelUpgradePolicy extends SimpleUserLevelUpgradePolicy {
+        private Long id;
+
+        public TestUserLevelUpgradePolicy(Long id) {
+            this.id = id;
+        }
+
+        @Override
+        public void upgradeLevel(Users user) {
+            if (user.getId() == this.id) {
+                throw new RuntimeException();
+            }
+            super.upgradeLevel(user);
+        }
     }
 }
