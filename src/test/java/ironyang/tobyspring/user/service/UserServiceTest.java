@@ -19,6 +19,7 @@ import static ironyang.tobyspring.user.service.levelupgradepolicy.SimpleUserLeve
 import static ironyang.tobyspring.user.service.levelupgradepolicy.SimpleUserLevelUpgradePolicy.MIN_RECOMMEND_FOR_GOLD;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class UserServiceTest {
@@ -78,6 +79,24 @@ class UserServiceTest {
         assertThat(updatedUsers.size()).isEqualTo(2);
         assertThat(updatedUsers).extracting("name").containsExactly(users.get(1).getName(), users.get(3).getName());
         assertThat(updatedUsers).extracting("level").containsExactly(Level.SILVER, Level.GOLD);
+    }
+
+    @Test
+    void upgradeLevels_isolationTest_withMockito() throws SQLException, ClassNotFoundException {
+        //given
+        UserDao mockUserDao = mock(UserDao.class);
+        when(mockUserDao.getAll()).thenReturn(this.users);
+        UserService userService = new UserServiceImpl(mockUserDao, new SimpleUserLevelUpgradePolicy());
+
+        //when
+        userService.upgradeLevels();
+
+        //then
+        verify(mockUserDao, times(2)).update(any(Users.class));
+        verify(mockUserDao).update(users.get(1));
+        assertThat(users.get(1).getLevel()).isEqualTo(Level.SILVER);
+        verify(mockUserDao).update(users.get(3));
+        assertThat(users.get(3).getLevel()).isEqualTo(Level.GOLD);
     }
 
     private void checkLevel(Users user, boolean upgraded) throws ClassNotFoundException, SQLException {
