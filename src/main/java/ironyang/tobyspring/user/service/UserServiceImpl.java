@@ -18,11 +18,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void upgradeLevels() throws SQLException, ClassNotFoundException {
-        log.info("transaction start");
-
         upgradeLevelsInternal();
-
-        log.info("transaction end");
     }
 
     private void upgradeLevelsInternal() throws SQLException, ClassNotFoundException {

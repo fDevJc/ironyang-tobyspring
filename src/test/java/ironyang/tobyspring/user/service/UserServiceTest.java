@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @SpringBootTest
 class UserServiceTest {
     @Autowired
-    UserServiceImpl userService;
+    UserService userService;
     @Autowired
     UserDao userDao;
 

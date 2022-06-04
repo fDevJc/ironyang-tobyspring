@@ -1,6 +1,8 @@
 package ironyang.tobyspring.user.dao;
 
+import ironyang.tobyspring.user.service.UserService;
 import ironyang.tobyspring.user.service.UserServiceImpl;
+import ironyang.tobyspring.user.service.UserServiceTx;
 import ironyang.tobyspring.user.service.levelupgradepolicy.SimpleUserLevelUpgradePolicy;
 import ironyang.tobyspring.user.service.levelupgradepolicy.UserLevelUpgradePolicy;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +16,12 @@ public class DaoFactory {
     }
 
     @Bean
-    public UserServiceImpl userService() {
+    public UserService userService() {
+        return new UserServiceTx(userServiceImpl());
+    }
+
+    @Bean
+    public UserService userServiceImpl() {
         return new UserServiceImpl(userDao(), userLevelUpgradePolicy());
     }
 
