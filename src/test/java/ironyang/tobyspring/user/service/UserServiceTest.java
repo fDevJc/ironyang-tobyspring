@@ -4,12 +4,14 @@ import ironyang.tobyspring.user.dao.UserDao;
 import ironyang.tobyspring.user.domain.Level;
 import ironyang.tobyspring.user.domain.Users;
 import ironyang.tobyspring.user.service.levelupgradepolicy.SimpleUserLevelUpgradePolicy;
+import org.h2.engine.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,7 +48,7 @@ class UserServiceTest {
     }
 
     @Test
-    void updateLevels() throws SQLException, ClassNotFoundException {
+    void upgradeLevels() throws SQLException, ClassNotFoundException {
         //given
         for (Users user : users) {
             userDao.add(user);
@@ -60,6 +62,22 @@ class UserServiceTest {
         checkLevel(users.get(2), false);
         checkLevel(users.get(3), true);
         checkLevel(users.get(4), false);
+    }
+
+    @Test
+    void upgradeLevels_isolationTest() throws SQLException, ClassNotFoundException {
+        //given
+        MockUserDao mockUserDao = new MockUserDao(this.users);
+        UserService userService = new UserServiceImpl(mockUserDao, new SimpleUserLevelUpgradePolicy());
+
+        //when
+        userService.upgradeLevels();
+
+        //then
+        List<Users> updatedUsers = mockUserDao.getUpdatedUsers();
+        assertThat(updatedUsers.size()).isEqualTo(2);
+        assertThat(updatedUsers).extracting("name").containsExactly(users.get(1).getName(), users.get(3).getName());
+        assertThat(updatedUsers).extracting("level").containsExactly(Level.SILVER, Level.GOLD);
     }
 
     private void checkLevel(Users user, boolean upgraded) throws ClassNotFoundException, SQLException {
@@ -116,6 +134,49 @@ class UserServiceTest {
                 throw new RuntimeException();
             }
             super.upgradeLevel(user);
+        }
+    }
+
+    static class MockUserDao implements UserDao {
+        private List<Users> users;
+        private List<Users> updatedUsers = new ArrayList<>();
+
+        public MockUserDao(List<Users> users) {
+            this.users = users;
+        }
+
+        public List<Users> getUpdatedUsers() {
+            return updatedUsers;
+        }
+
+        @Override
+        public List<Users> getAll() throws SQLException, ClassNotFoundException {
+            return this.users;
+        }
+
+        @Override
+        public void update(Users user) throws SQLException, ClassNotFoundException {
+            updatedUsers.add(user);
+        }
+
+        @Override
+        public void add(Users user) throws ClassNotFoundException, SQLException {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void deleteAll() throws SQLException, ClassNotFoundException {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Users get(Long id) throws ClassNotFoundException, SQLException {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public int getCount() throws ClassNotFoundException, SQLException {
+            throw new UnsupportedOperationException();
         }
     }
 }

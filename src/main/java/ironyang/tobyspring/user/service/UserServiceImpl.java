@@ -18,10 +18,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void upgradeLevels() throws SQLException, ClassNotFoundException {
-        upgradeLevelsInternal();
-    }
-
-    private void upgradeLevelsInternal() throws SQLException, ClassNotFoundException {
         List<Users> users = userDao.getAll();
         for (Users user : users) {
             if (userLevelUpgradePolicy.canUpgradeLevel(user)) {
