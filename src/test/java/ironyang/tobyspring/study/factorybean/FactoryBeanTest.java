@@ -26,4 +26,5 @@ public class FactoryBeanTest {
         Object message = context.getBean("&message");
         Assertions.assertThat(message).isInstanceOf(MessageFactoryBean.class);
     }
+
 }
