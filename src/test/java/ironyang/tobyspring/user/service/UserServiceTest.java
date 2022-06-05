@@ -4,7 +4,6 @@ import ironyang.tobyspring.user.dao.UserDao;
 import ironyang.tobyspring.user.domain.Level;
 import ironyang.tobyspring.user.domain.Users;
 import ironyang.tobyspring.user.service.levelupgradepolicy.SimpleUserLevelUpgradePolicy;
-import org.h2.engine.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +17,13 @@ import java.util.List;
 import static ironyang.tobyspring.user.service.levelupgradepolicy.SimpleUserLevelUpgradePolicy.MIN_LOGIN_COUNT_FOR_SILVER;
 import static ironyang.tobyspring.user.service.levelupgradepolicy.SimpleUserLevelUpgradePolicy.MIN_RECOMMEND_FOR_GOLD;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class UserServiceTest {
     @Autowired
     UserService userService;
+
     @Autowired
     UserDao userDao;
 
@@ -44,6 +43,9 @@ class UserServiceTest {
 
     @Test
     void bean() {
+
+        System.out.println("userService.getClass() = " + userService.getClass());
+        
         assertThat(userService).isNotNull();
         assertThat(userDao).isNotNull();
     }
@@ -125,19 +127,6 @@ class UserServiceTest {
         //then
         assertThat(foundUserWithLevel.getLevel()).isEqualTo(userWithLevel.getLevel());
         assertThat(foundUserWithoutLevel.getLevel()).isEqualTo(userWithoutLevel.getLevel());
-    }
-
-//    @Test
-    void upgradeAllOrNothing() throws SQLException, ClassNotFoundException {
-        UserServiceImpl testUserService = new UserServiceImpl(this.userDao, new TestUserLevelUpgradePolicy(users.get(3).getId()));
-        for (Users user : users) {
-            userDao.add(user);
-        }
-        assertThatThrownBy(() -> testUserService.upgradeLevels())
-                .isInstanceOf(RuntimeException.class);
-        for (Users user : users) {
-            checkLevel(user, false);
-        }
     }
 
     static class TestUserLevelUpgradePolicy extends SimpleUserLevelUpgradePolicy {
