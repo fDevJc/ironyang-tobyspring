@@ -32,8 +32,8 @@ public class MyUserServiceTest {
     @Autowired
     UserService userService;
 
-    @Autowired
-    UserService testUserService;
+//    @Autowired
+//    UserService testUserService;
 
     List<Users> users;
 
@@ -51,6 +51,7 @@ public class MyUserServiceTest {
     //TODO 테스트 통과시키기
     @Test
     void upgradeAllOrNothing() throws SQLException, ClassNotFoundException {
+        UserService testUserService = userService;
         for (Users user : users) {
             userDao.add(user);
         }
@@ -67,10 +68,9 @@ public class MyUserServiceTest {
         }
     }
 
-    @Configuration
+//    @Configuration
     static class TestConfig {
-
-        @Bean
+//        @Bean
         public UserService testUserService() {
             return new UserServiceImpl(new UserDaoMy(new SimpleConnectionMaker()), new UserServiceTest.TestUserLevelUpgradePolicy(4L));
         }
