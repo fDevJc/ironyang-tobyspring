@@ -14,6 +14,7 @@ public class DaoFactory {
 
     @Bean
     public UserLevelUpgradePolicy userLevelUpgradePolicy() {
+
         return new SimpleUserLevelUpgradePolicy();
     }
 
